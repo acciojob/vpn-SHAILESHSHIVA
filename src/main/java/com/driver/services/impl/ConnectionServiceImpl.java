@@ -23,10 +23,10 @@ public class ConnectionServiceImpl implements ConnectionService {
     public User connect(int userId, String countryName) throws Exception{
 
         User user = userRepository2.findById(userId).get();
-        if(user.isConnected()==true){
+        if(user.getConnected()==true){
             throw new Exception("Already connected");
         }
-        else if(countryName.equalsIgnoreCase(user.getCountry().getCountryName().toString())){
+        else if(countryName.equalsIgnoreCase(user.getOriginalCountry().getCountryName().toString())){
             return user;
         }
        if(user.getConnectionList().isEmpty()){
@@ -50,7 +50,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         User user = userRepository2.findById(userId).get();
 
-        if(user.isConnected()==false){
+        if(user.getConnected()==false){
             throw new Exception("Already disconnected");
 
         }
@@ -67,8 +67,8 @@ public class ConnectionServiceImpl implements ConnectionService {
         User sender = userRepository2.findById(senderId).get();
         User reciever = userRepository2.findById(receiverId).get();
 
-        String recieverCountry = reciever.getCountry().getCountryName().toString().substring(0,3).toUpperCase();
-        String senderCountry = sender.getCountry().getCountryName().toString().substring(0,3).toUpperCase();
+        String recieverCountry = reciever.getOriginalCountry().getCountryName().toString().substring(0,3).toUpperCase();
+        String senderCountry = sender.getOriginalCountry().getCountryName().toString().substring(0,3).toUpperCase();
 
         if(!recieverCountry.equals(senderCountry)){
 
@@ -91,7 +91,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             senderToBeConnected = serviceProvider.getCountryList().get(0);
 
             sender.setConnected(true);
-            sender.setCountry(senderToBeConnected);
+            sender.setOriginalCountry(senderToBeConnected);
             return userRepository2.save(sender);
 
 
